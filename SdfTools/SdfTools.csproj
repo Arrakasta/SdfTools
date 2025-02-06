@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Abstracts\" />
     <Folder Include="Services\" />
     <Folder Include="Utilities\" />
   </ItemGroup>

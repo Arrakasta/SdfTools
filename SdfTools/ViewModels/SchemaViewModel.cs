@@ -1,47 +1,45 @@
-﻿using SdfTools.Models;
+﻿using SdfTools.Abstracts;
+using SdfTools.Models;
 using SdfTools.Services;
 using SdfTools.Utilities;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
 namespace SdfTools.ViewModels;
 
-public class SchemaViewModel : INotifyPropertyChanged
+public class SchemaViewModel : ViewModelBase
 {
-    private readonly SchemaService _schemaService = new SchemaService();
-    private string _schemaName;
-    private string _newAttributeName;
-    private string _selectedDataType;
+    private readonly SchemaService _schemaService = new();
+    private string? _schemaName;
+    private string? _newAttributeName;
+    private string? _selectedDataType;
 
-    public string SchemaName
+    public string? SchemaName
     {
         get => _schemaName;
-        set { _schemaName = value; OnPropertyChanged(nameof(SchemaName)); }
+        set => Set(ref _schemaName, value);
+    }
+
+    public string? NewAttributeName
+    {
+        get => _newAttributeName;
+        set => Set(ref _newAttributeName, value);
+    }
+
+    public string? SelectedDataType
+    {
+        get => _selectedDataType;
+        set => Set(ref _selectedDataType, value);
     }
 
     public ObservableCollection<DataAttribute> Attributes { get; set; } = [];
 
     public List<string> DataTypes { get; } = ["Text", "Integer", "Double", "DateTime", "Boolean", "SelectList", "Lookup"];
 
-    public string NewAttributeName
-    {
-        get => _newAttributeName;
-        set { _newAttributeName = value; OnPropertyChanged(nameof(NewAttributeName)); }
-    }
-
-    public string SelectedDataType
-    {
-        get => _selectedDataType;
-        set { _selectedDataType = value; OnPropertyChanged(nameof(SelectedDataType)); }
-    }
-
     public ICommand AddAttributeCommand { get; }
     public ICommand RemoveAttributeCommand { get; }
     public ICommand ValidateSchemaCommand { get; }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
 
     public SchemaViewModel()
     {
@@ -57,8 +55,14 @@ public class SchemaViewModel : INotifyPropertyChanged
     {
         try
         {
+            if (NewAttributeName == null || SelectedDataType == null)
+            {
+                return;
+            }
+
             _schemaService.AddAttribute(NewAttributeName, SelectedDataType);
             LoadAttributes();
+
             NewAttributeName = string.Empty;
         }
         catch (Exception ex)
@@ -95,6 +99,4 @@ public class SchemaViewModel : INotifyPropertyChanged
             Attributes.Add(attr);
         }
     }
-
-    protected void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 }

@@ -3,45 +3,48 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using SdfTools.Abstracts;
 using SdfTools.Utilities;
 using SdfTools.Views;
 
 namespace SdfTools.ViewModels;
 
-public class MainViewModel : INotifyPropertyChanged
+public class MainViewModel : ViewModelBase
 {
-    // Пути к выбранным файлам
-    private string _selectedSchemaPath;
-    public string SelectedSchemaPath
+    // Paths to selected files
+    private string? _selectedSchemaPath;
+    public string? SelectedSchemaPath
     {
         get => _selectedSchemaPath;
         set
         {
-            _selectedSchemaPath = value;
-            OnPropertyChanged();
-            TryAutoMap();
+            if (Set(ref _selectedSchemaPath, value))
+            {
+                TryAutoMap();
+            }
         }
     }
 
-    private string _selectedFilePath;
-    public string SelectedFilePath
+    private string? _selectedFilePath;
+    public string? SelectedFilePath
     {
         get => _selectedFilePath;
         set
         {
-            _selectedFilePath = value;
-            OnPropertyChanged();
-            TryAutoMap();
+            if (Set(ref _selectedFilePath, value))
+            {
+                TryAutoMap();
+            }
         }
     }
 
-    // Коллекция исходных атрибутов, полученных при импорте файла
-    public ObservableCollection<string> SourceAttributes { get; set; } = new ObservableCollection<string>();
+    // Collection of source attributes obtained when importing a file
+    public ObservableCollection<string> SourceAttributes { get; set; } = new();
 
-    // Коллекция маппинга (элементы, где TargetAttributeName – атрибут из схемы, а SelectedSourceAttribute – выбранный источник)
-    public ObservableCollection<MappingItem> MappingItems { get; set; } = new ObservableCollection<MappingItem>();
+    // Collection of mappings (items where TargetAttributeName is an attribute from the schema, and SelectedSourceAttribute is the selected source)
+    public ObservableCollection<MappingItem> MappingItems { get; set; } = [];
 
-    // Команды
+    // Commands
     public ICommand SelectSchemaCommand { get; }
     public ICommand SelectFileCommand { get; }
     public ICommand StartConversionCommand { get; }
@@ -55,10 +58,10 @@ public class MainViewModel : INotifyPropertyChanged
         EditSchemaCommand = new RelayCommand(EditSchema, CanEditSchema);
     }
 
-    // Команда выбора схемы
+    // Command to select schema
     private void SelectSchema(object parameter)
     {
-        OpenFileDialog dlg = new OpenFileDialog
+        var dlg = new OpenFileDialog
         {
             Filter = "Schema Files (*.xml;*.json)|*.xml;*.json|All Files (*.*)|*.*"
         };
@@ -66,12 +69,12 @@ public class MainViewModel : INotifyPropertyChanged
         if (dlg.ShowDialog() == true)
         {
             SelectedSchemaPath = dlg.FileName;
-            // Здесь можно добавить логику загрузки схемы и заполнения MappingItems.TargetAttributeName
+            // Here you can add logic to load the schema and populate MappingItems.TargetAttributeName
             LoadSchema(SelectedSchemaPath);
         }
     }
 
-    // Команда выбора исходного файла
+    // Command to select source file
     private void SelectFile(object parameter)
     {
         OpenFileDialog dlg = new OpenFileDialog
@@ -82,16 +85,16 @@ public class MainViewModel : INotifyPropertyChanged
         if (dlg.ShowDialog() == true)
         {
             SelectedFilePath = dlg.FileName;
-            // Здесь можно добавить логику импорта данных с использованием FDO для заполнения SourceAttributes
+            // Here you can add logic to import data using FDO to populate SourceAttributes
             ImportSourceAttributes(SelectedFilePath);
         }
     }
 
-    // Имитация загрузки схемы (заполнение списка целевых атрибутов)
+    // Simulate loading schema (populate target attribute list)
     private void LoadSchema(string schemaPath)
     {
-        // Пример: загрузка целевой схемы из файла и заполнение MappingItems
-        // В реальной реализации схема будет десериализована в список объектов
+        // Example: load target schema from file and populate MappingItems
+        // In a real implementation, the schema will be deserialized into a list of objects
         var targetAttributes = new[] { "FeatId", "Contractor", "Address", "CreatedDate", "LastUpdate" };
 
         MappingItems.Clear();
@@ -100,15 +103,15 @@ public class MainViewModel : INotifyPropertyChanged
             MappingItems.Add(new MappingItem { TargetAttributeName = attr });
         }
 
-        // После загрузки схемы можно попробовать автозаполнение маппинга
+        // After loading the schema, you can try auto-mapping
         TryAutoMap();
     }
 
-    // Имитация импорта исходных атрибутов из файла
+    // Simulate importing source attributes from file
     private void ImportSourceAttributes(string filePath)
     {
-        // Пример: получение списка атрибутов из исходного файла
-        // В реальной реализации следует использовать ImportService с FDO для извлечения атрибутов
+        // Example: get a list of attributes from the source file
+        // In a real implementation, you should use ImportService with FDO to extract attributes
         var importedAttributes = new[] { "FeatId", "Contractor", "Address", "CreationDate", "LastUpdate" };
 
         SourceAttributes.Clear();
@@ -117,24 +120,24 @@ public class MainViewModel : INotifyPropertyChanged
             SourceAttributes.Add(attr);
         }
 
-        // После импорта можно попробовать автозаполнение маппинга
+        // After importing, you can try auto-mapping
         TryAutoMap();
     }
 
-    // Автоматический маппинг: если имена совпадают, устанавливаем связь
+    // Automatic mapping: if names match, set the connection
     private void TryAutoMap()
     {
-        // Выполняем автозаполнение только если загружены и схема, и исходные атрибуты
+        // Perform auto-mapping only if both schema and source attributes are loaded
         if (string.IsNullOrEmpty(SelectedSchemaPath) || string.IsNullOrEmpty(SelectedFilePath))
             return;
 
         foreach (var mapping in MappingItems)
         {
-            // Если маппинг уже установлен, пропускаем
+            // If mapping is already set, skip
             if (!string.IsNullOrEmpty(mapping.SelectedSourceAttribute))
                 continue;
 
-            // Ищем в списке исходных атрибутов атрибут с совпадающим именем (без учета регистра)
+            // Look for an attribute in the source attribute list with a matching name (case-insensitive)
             var match = SourceAttributes.FirstOrDefault(attr =>
                 string.Equals(attr, mapping.TargetAttributeName, StringComparison.OrdinalIgnoreCase));
 
@@ -142,12 +145,12 @@ public class MainViewModel : INotifyPropertyChanged
             {
                 mapping.SelectedSourceAttribute = match;
             }
-            // Если совпадения не найдено, значение остается пустым,
-            // и пользователь сможет выбрать нужный вариант из выпадающего списка
+            // If no match is found, the value remains empty,
+            // and the user will be able to select the desired option from the dropdown list
         }
     }
 
-    // Пример команды запуска конвертации
+    // Example command to start conversion
     private bool CanStartConversion(object parameter) =>
         !string.IsNullOrEmpty(SelectedSchemaPath) &&
         !string.IsNullOrEmpty(SelectedFilePath) &&
@@ -155,46 +158,31 @@ public class MainViewModel : INotifyPropertyChanged
 
     private void StartConversion(object parameter)
     {
-        // Здесь должна быть логика запуска конвертации с учетом маппинга
+        // Here should be the logic to start the conversion considering the mapping
     }
 
-    // Пример команды редактирования схемы
+    // Example command to edit schema
     private bool CanEditSchema(object parameter) => true;//MappingItems.Count > 0;
+
     private void EditSchema(object parameter)
     {
-        // Здесь логика открытия окна редактирования схемы
+        // Here is the logic to open the schema editor window
         var view = new SchemaEditor
         {
             DataContext = new SchemaViewModel()
         };
         view.ShowDialog();
     }
-
-    public event PropertyChangedEventHandler PropertyChanged;
-    protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
 }
 
 // Класс для элемента маппинга
-public class MappingItem : INotifyPropertyChanged
+public class MappingItem : ViewModelBase
 {
-    private string _selectedSourceAttribute;
-    public string TargetAttributeName { get; set; }
-    public string SelectedSourceAttribute
+    private string? _selectedSourceAttribute;
+    public string? TargetAttributeName { get; set; }
+    public string? SelectedSourceAttribute
     {
         get => _selectedSourceAttribute;
-        set
-        {
-            _selectedSourceAttribute = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public event PropertyChangedEventHandler PropertyChanged;
-    protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        set => Set(ref _selectedSourceAttribute, value);
     }
 }
