@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\" />
+    <Folder Include="Utilities\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="OSGeo.FDO">
+      <HintPath>bin\Debug\net8.0-windows\FDO\OSGeo.FDO.dll</HintPath>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Common">
+      <HintPath>bin\Debug\net8.0-windows\FDO\OSGeo.FDO.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Geometry">
+      <HintPath>bin\Debug\net8.0-windows\FDO\OSGeo.FDO.Geometry.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
