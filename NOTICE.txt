@@ -1,0 +1,15 @@
+﻿NOTICE
+
+This software, SdfTools, includes the use of third-party libraries subject to their respective licenses.
+
+1. OSGeo FDO (Feature Data Objects)
+   - Copyright (C) Open Source Geospatial Foundation (OSGeo)
+   - Licensed under the GNU Lesser General Public License (LGPL) version 2.1 or later.
+   - The full text of the LGPL 2.1 license can be found at: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+   - No modifications were made to the FDO library.
+   - The FDO library is used "AS IS" as a dynamically linked dependency.
+
+Disclaimer:
+This software is provided "AS IS" without any warranties or guarantees of any kind. The authors of SdfTools are not responsible for any issues arising from the use of third-party libraries included in this project. Users should review the respective licenses and ensure compliance with their terms.
+
+For more information on OSGeo FDO, visit: https://fdo.osgeo.org/
