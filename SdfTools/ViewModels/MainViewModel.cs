@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using SdfTools.Abstracts;
+using SdfTools.Services; // Add this for DialogService
 using SdfTools.Utilities;
 using SdfTools.Views;
 
@@ -169,7 +170,8 @@ public class MainViewModel : ViewModelBase
         // Here is the logic to open the schema editor window
         var view = new SchemaEditor
         {
-            DataContext = new SchemaViewModel()
+            // Use the injected DialogService instance for SchemaViewModel
+            DataContext = new SchemaViewModel(_dialogService) 
         };
         view.ShowDialog();
     }

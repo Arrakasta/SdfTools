@@ -11,6 +11,7 @@ namespace SdfTools.ViewModels;
 public class SchemaViewModel : ViewModelBase
 {
     private readonly SchemaService _schemaService = new();
+    private readonly IDialogService _dialogService; // Add this
     private string? _schemaName;
     private string? _newAttributeName;
     private string? _selectedDataType;
@@ -41,8 +42,9 @@ public class SchemaViewModel : ViewModelBase
     public ICommand RemoveAttributeCommand { get; }
     public ICommand ValidateSchemaCommand { get; }
 
-    public SchemaViewModel()
+    public SchemaViewModel(IDialogService dialogService) // Modify constructor
     {
+        _dialogService = dialogService; // Add this
         AddAttributeCommand = new RelayCommand(AddAttribute);
         RemoveAttributeCommand = new RelayCommand<DataAttribute>(RemoveAttribute);
         ValidateSchemaCommand = new RelayCommand(ValidateSchema);
@@ -67,7 +69,7 @@ public class SchemaViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            _dialogService.ShowError(ex.Message, "Ошибка");
         }
     }
 
@@ -83,11 +85,11 @@ public class SchemaViewModel : ViewModelBase
     {
         if (_schemaService.ValidateSchema(out string message))
         {
-            MessageBox.Show("Схема валидна!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+            _dialogService.ShowMessage("Схема валидна!", "Успех");
         }
         else
         {
-            MessageBox.Show(message, "Ошибка валидации", MessageBoxButton.OK, MessageBoxImage.Warning);
+            _dialogService.ShowWarning(message, "Ошибка валидации");
         }
     }
 
