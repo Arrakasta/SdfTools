@@ -169,8 +169,8 @@ public class MainViewModel : ViewModelBase
         // Here is the logic to open the schema editor window
         var view = new SchemaEditor
         {
-            // Pass a new DialogService instance to SchemaViewModel
-            DataContext = new SchemaViewModel(new DialogService()) 
+            // Pass the injected DialogService instance to SchemaViewModel
+            DataContext = new SchemaViewModel(_dialogService) 
         };
         view.ShowDialog();
     }
