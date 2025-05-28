@@ -8,6 +8,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SdfTools.ViewModels; // Add this
+using SdfTools.Services;   // Add this
 
 namespace SdfTools
 {
@@ -19,6 +21,8 @@ namespace SdfTools
         public MainWindow()
         {
             InitializeComponent();
+            // Instantiate MainViewModel with DialogService and set as DataContext
+            DataContext = new MainViewModel(new DialogService());
         }
     }
 }

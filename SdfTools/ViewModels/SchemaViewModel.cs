@@ -1,5 +1,6 @@
 ﻿using SdfTools.Abstracts;
 using SdfTools.Models;
+using SdfTools.Resources; // Add this
 using SdfTools.Services;
 using SdfTools.Utilities;
 using System.Collections.ObjectModel;
@@ -69,7 +70,7 @@ public class SchemaViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            _dialogService.ShowError(ex.Message, "Ошибка");
+            _dialogService.ShowError(ex.Message, Resources.DialogTitle_Error);
         }
     }
 
@@ -85,11 +86,11 @@ public class SchemaViewModel : ViewModelBase
     {
         if (_schemaService.ValidateSchema(out string message))
         {
-            _dialogService.ShowMessage("Схема валидна!", "Успех");
+            _dialogService.ShowMessage(Resources.Validation_SchemaIsValid, Resources.DialogTitle_Success);
         }
         else
         {
-            _dialogService.ShowWarning(message, "Ошибка валидации");
+            _dialogService.ShowWarning(message, Resources.DialogTitle_ValidationWarning);
         }
     }
 
