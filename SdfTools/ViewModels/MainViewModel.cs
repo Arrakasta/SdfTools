@@ -1,10 +1,10 @@
-﻿using Microsoft.Win32;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using SdfTools.Abstracts;
-using SdfTools.Services; // Add this for DialogService
+using SdfTools.Resources; // Add this
+using SdfTools.Services; 
 using SdfTools.Utilities;
 using SdfTools.Views;
 
@@ -12,6 +12,7 @@ namespace SdfTools.ViewModels;
 
 public class MainViewModel : ViewModelBase
 {
+    private readonly IDialogService _dialogService; // Add this
     // Paths to selected files
     private string? _selectedSchemaPath;
     public string? SelectedSchemaPath
@@ -51,8 +52,10 @@ public class MainViewModel : ViewModelBase
     public ICommand StartConversionCommand { get; }
     public ICommand EditSchemaCommand { get; }
 
-    public MainViewModel()
+    public MainViewModel(IDialogService dialogService) // Modify constructor
     {
+        _dialogService = dialogService; // Add this
+
         SelectSchemaCommand = new RelayCommand(SelectSchema);
         SelectFileCommand = new RelayCommand(SelectFile);
         StartConversionCommand = new RelayCommand(StartConversion, CanStartConversion);
@@ -62,14 +65,12 @@ public class MainViewModel : ViewModelBase
     // Command to select schema
     private void SelectSchema(object parameter)
     {
-        var dlg = new OpenFileDialog
-        {
-            Filter = "Schema Files (*.xml;*.json)|*.xml;*.json|All Files (*.*)|*.*"
-        };
+        string filter = $"{Resources.FileDialog_SchemaFiles} (*.xml;*.json)|*.xml;*.json|{Resources.FileDialog_AllFiles} (*.*)|*.*";
+        string? filePath = _dialogService.ShowOpenFileDialog(filter);
 
-        if (dlg.ShowDialog() == true)
+        if (!string.IsNullOrEmpty(filePath))
         {
-            SelectedSchemaPath = dlg.FileName;
+            SelectedSchemaPath = filePath;
             // Here you can add logic to load the schema and populate MappingItems.TargetAttributeName
             LoadSchema(SelectedSchemaPath);
         }
@@ -78,14 +79,12 @@ public class MainViewModel : ViewModelBase
     // Command to select source file
     private void SelectFile(object parameter)
     {
-        OpenFileDialog dlg = new OpenFileDialog
-        {
-            Filter = "Geo Data Files (*.shp;*.sdf;*.sqlite)|*.shp;*.sdf;*.sqlite"
-        };
+        string filter = $"{Resources.FileDialog_GeoDataFiles} (*.shp;*.sdf;*.sqlite)|*.shp;*.sdf;*.sqlite";
+        string? filePath = _dialogService.ShowOpenFileDialog(filter);
 
-        if (dlg.ShowDialog() == true)
+        if (!string.IsNullOrEmpty(filePath))
         {
-            SelectedFilePath = dlg.FileName;
+            SelectedFilePath = filePath;
             // Here you can add logic to import data using FDO to populate SourceAttributes
             ImportSourceAttributes(SelectedFilePath);
         }
@@ -170,8 +169,8 @@ public class MainViewModel : ViewModelBase
         // Here is the logic to open the schema editor window
         var view = new SchemaEditor
         {
-            // Use the injected DialogService instance for SchemaViewModel
-            DataContext = new SchemaViewModel(_dialogService) 
+            // Pass a new DialogService instance to SchemaViewModel
+            DataContext = new SchemaViewModel(new DialogService()) 
         };
         view.ShowDialog();
     }

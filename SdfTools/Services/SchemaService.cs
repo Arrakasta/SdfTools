@@ -1,4 +1,5 @@
 ﻿using SdfTools.Models;
+using SdfTools.Resources; // Add this
 
 namespace SdfTools.Services;
 
@@ -14,7 +15,7 @@ public class SchemaService
     public void AddAttribute(string name, string dataType)
     {
         if (CurrentSchema.Attributes.Any(a => a.Name == name))
-            throw new Exception("Атрибут с таким именем уже существует.");
+            throw new ArgumentException(Resources.Error_AttributeAlreadyExists, nameof(name));
 
         CurrentSchema.Attributes.Add(new DataAttribute { Name = name, DataType = dataType });
     }
@@ -34,11 +35,11 @@ public class SchemaService
 
         if (duplicateNames.Any())
         {
-            message = $"Дублируются атрибуты: {string.Join(", ", duplicateNames)}";
+            message = $"{Resources.Validation_DuplicateAttributesMessagePrefix}{string.Join(", ", duplicateNames)}";
             return false;
         }
 
-        message = "Схема валидна.";
+        message = Resources.Validation_SchemaIsValid;
         return true;
     }
 }
