@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  
+  <!-- Main Window UI Strings -->  <data name="MainWindow_Title" xml:space="preserve">
+    <value>Конвертер геоданных</value>
+  </data>
+  <data name="MainWindow_Language" xml:space="preserve">
+    <value>Язык:</value>
+  </data>
+  <data name="MainWindow_SelectedSchema" xml:space="preserve">
+    <value>Выбранная схема:</value>
+  </data>
+  <data name="MainWindow_SelectSchemaButton" xml:space="preserve">
+    <value>Выбрать схему</value>
+  </data>
+  <data name="MainWindow_SourceFile" xml:space="preserve">
+    <value>Исходный файл:</value>
+  </data>
+  <data name="MainWindow_SelectFileButton" xml:space="preserve">
+    <value>Выбрать файл</value>
+  </data>
+  <data name="MainWindow_AttributeMapping" xml:space="preserve">
+    <value>Маппинг атрибутов</value>
+  </data>
+  <data name="MainWindow_TargetAttribute" xml:space="preserve">
+    <value>Целевой атрибут</value>
+  </data>
+  <data name="MainWindow_SourceAttribute" xml:space="preserve">
+    <value>Исходный атрибут</value>
+  </data>
+  <data name="MainWindow_StartConversion" xml:space="preserve">
+    <value>Начать конвертацию</value>
+  </data>
+  <data name="MainWindow_EditSchema" xml:space="preserve">
+    <value>Редактировать схему</value>
+  </data>
+  
+  <!-- Schema Editor Window UI Strings -->
+  <data name="SchemaEditor_Title" xml:space="preserve">
+    <value>Редактор схемы</value>
+  </data>
+  <data name="SchemaEditor_SchemaName" xml:space="preserve">
+    <value>Имя схемы:</value>
+  </data>
+  <data name="SchemaEditor_AddAttribute" xml:space="preserve">
+    <value>Добавить атрибут:</value>
+  </data>
+  <data name="SchemaEditor_AddButton" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="SchemaEditor_DeleteButton" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="SchemaEditor_ValidateSchema" xml:space="preserve">
+    <value>Проверить схему</value>
+  </data>
+  
+  <!-- File Dialog Filters -->
+  <data name="FileDialog_SchemaFilter" xml:space="preserve">
+    <value>Файлы схем (*.xml;*.json)|*.xml;*.json|Все файлы (*.*)|*.*</value>
+  </data>
+  <data name="FileDialog_GeoDataFilter" xml:space="preserve">
+    <value>Файлы геоданных (*.shp;*.sdf;*.sqlite)|*.shp;*.sdf;*.sqlite</value>
+  </data>
+  
+  <!-- Schema Service Messages -->
+  <data name="SchemaService_AttributeAlreadyExists" xml:space="preserve">
+    <value>Атрибут с таким именем уже существует.</value>
+  </data>
+  <data name="SchemaService_DuplicateAttributes" xml:space="preserve">
+    <value>Дублируются атрибуты: {0}</value>
+  </data>
+  <data name="SchemaService_SchemaValid" xml:space="preserve">
+    <value>Схема валидна.</value>
+  </data>
+  
+  <!-- Default Values -->
+  <data name="Default_NewSchemaName" xml:space="preserve">
+    <value>НоваяСхема</value>
+  </data>
+</root>

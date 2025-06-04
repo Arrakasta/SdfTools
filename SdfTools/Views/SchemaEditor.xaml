@@ -4,34 +4,32 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SdfTools.Views"
+        xmlns:loc="clr-namespace:SdfTools.Localization"
         mc:Ignorable="d"
-        Title="SchemaEditor" Height="450" Width="800">
-    <Grid>
+        Title="{Binding Source={x:Static loc:LocalizedStrings.Instance}, Path=SchemaEditor_Title}" Height="450" Width="800">    <Grid>
         <StackPanel Margin="10">
-            <TextBlock Text="Имя схемы:" />
+            <TextBlock Text="{Binding Source={x:Static loc:LocalizedStrings.Instance}, Path=SchemaEditor_SchemaName}" />
             <TextBox Text="{Binding SchemaName, Mode=TwoWay}" />
 
-            <TextBlock Text="Добавить атрибут:" Margin="0,10,0,0"/>
+            <TextBlock Text="{Binding Source={x:Static loc:LocalizedStrings.Instance}, Path=SchemaEditor_AddAttribute}" Margin="0,10,0,0"/>
             <StackPanel Orientation="Horizontal">
                 <TextBox Text="{Binding NewAttributeName, Mode=TwoWay}" Width="200" />
                 <ComboBox ItemsSource="{Binding DataTypes}" SelectedItem="{Binding SelectedDataType}" Width="100" />
-                <Button Content="Добавить" Command="{Binding AddAttributeCommand}" />
+                <Button Content="{Binding Source={x:Static loc:LocalizedStrings.Instance}, Path=SchemaEditor_AddButton}" Command="{Binding AddAttributeCommand}" />
             </StackPanel>
 
             <ListBox ItemsSource="{Binding Attributes}" Height="200">
                 <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
+                    <DataTemplate>                        <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding Name}" Width="200"/>
                             <TextBlock Text="{Binding DataType}" Width="100"/>
-                            <Button Content="Удалить" Command="{Binding DataContext.RemoveAttributeCommand, RelativeSource={RelativeSource AncestorType=Window}}" 
+                            <Button Content="{Binding Source={x:Static loc:LocalizedStrings.Instance}, Path=SchemaEditor_DeleteButton}" Command="{Binding DataContext.RemoveAttributeCommand, RelativeSource={RelativeSource AncestorType=Window}}" 
                                     CommandParameter="{Binding}" />
                         </StackPanel>
                     </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                </ListBox.ItemTemplate>            </ListBox>
 
-            <Button Content="Проверить схему" Command="{Binding ValidateSchemaCommand}" />
+            <Button Content="{Binding Source={x:Static loc:LocalizedStrings.Instance}, Path=SchemaEditor_ValidateSchema}" Command="{Binding ValidateSchemaCommand}" />
         </StackPanel>
     </Grid>
 </Window>

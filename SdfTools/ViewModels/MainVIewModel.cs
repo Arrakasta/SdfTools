@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+﻿    using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -6,6 +6,9 @@ using System.Windows.Input;
 using SdfTools.Abstracts;
 using SdfTools.Utilities;
 using SdfTools.Views;
+using SdfTools.Localization;
+using SdfTools.Services;
+using System.Globalization;
 
 namespace SdfTools.ViewModels;
 
@@ -50,20 +53,38 @@ public class MainViewModel : ViewModelBase
     public ICommand StartConversionCommand { get; }
     public ICommand EditSchemaCommand { get; }
 
+    // Language switching
+    private CultureInfo _selectedLanguage;
+    public CultureInfo SelectedLanguage
+    {
+        get => _selectedLanguage;
+        set
+        {
+            if (Set(ref _selectedLanguage, value))
+            {
+                LocalizationService.Instance.SetLanguage(value);
+            }
+        }
+    }
+
+    public ObservableCollection<CultureInfo> AvailableLanguages { get; }
+
     public MainViewModel()
     {
+        // Initialize language settings
+        AvailableLanguages = new ObservableCollection<CultureInfo>(LocalizationService.Instance.SupportedCultures);
+        _selectedLanguage = LocalizationService.Instance.CurrentCulture;
+
         SelectSchemaCommand = new RelayCommand(SelectSchema);
         SelectFileCommand = new RelayCommand(SelectFile);
         StartConversionCommand = new RelayCommand(StartConversion, CanStartConversion);
         EditSchemaCommand = new RelayCommand(EditSchema, CanEditSchema);
-    }
-
-    // Command to select schema
+    }    // Command to select schema
     private void SelectSchema(object parameter)
     {
         var dlg = new OpenFileDialog
         {
-            Filter = "Schema Files (*.xml;*.json)|*.xml;*.json|All Files (*.*)|*.*"
+            Filter = LocalizedStrings.Instance.FileDialog_SchemaFilter
         };
 
         if (dlg.ShowDialog() == true)
@@ -72,14 +93,12 @@ public class MainViewModel : ViewModelBase
             // Here you can add logic to load the schema and populate MappingItems.TargetAttributeName
             LoadSchema(SelectedSchemaPath);
         }
-    }
-
-    // Command to select source file
+    }    // Command to select source file
     private void SelectFile(object parameter)
     {
         OpenFileDialog dlg = new OpenFileDialog
         {
-            Filter = "Geo Data Files (*.shp;*.sdf;*.sqlite)|*.shp;*.sdf;*.sqlite"
+            Filter = LocalizedStrings.Instance.FileDialog_GeoDataFilter
         };
 
         if (dlg.ShowDialog() == true)

@@ -1,4 +1,5 @@
 ﻿using SdfTools.Models;
+using SdfTools.Localization;
 
 namespace SdfTools.Services;
 
@@ -9,12 +10,10 @@ public class SchemaService
     public void CreateNewSchema(string name)
     {
         CurrentSchema = new DataSchema { Name = name };
-    }
-
-    public void AddAttribute(string name, string dataType)
+    }    public void AddAttribute(string name, string dataType)
     {
         if (CurrentSchema.Attributes.Any(a => a.Name == name))
-            throw new Exception("Атрибут с таким именем уже существует.");
+            throw new Exception(LocalizedStrings.Instance.SchemaService_AttributeAlreadyExists);
 
         CurrentSchema.Attributes.Add(new DataAttribute { Name = name, DataType = dataType });
     }
@@ -24,9 +23,7 @@ public class SchemaService
         var attribute = CurrentSchema.Attributes.FirstOrDefault(a => a.Name == name);
         if (attribute != null)
             CurrentSchema.Attributes.Remove(attribute);
-    }
-
-    public bool ValidateSchema(out string message)
+    }    public bool ValidateSchema(out string message)
     {
         var duplicateNames = CurrentSchema.Attributes.GroupBy(a => a.Name)
             .Where(g => g.Count() > 1)
@@ -34,11 +31,11 @@ public class SchemaService
 
         if (duplicateNames.Any())
         {
-            message = $"Дублируются атрибуты: {string.Join(", ", duplicateNames)}";
+            message = string.Format(LocalizedStrings.Instance.SchemaService_DuplicateAttributes, string.Join(", ", duplicateNames));
             return false;
         }
 
-        message = "Схема валидна.";
+        message = LocalizedStrings.Instance.SchemaService_SchemaValid;
         return true;
     }
 }

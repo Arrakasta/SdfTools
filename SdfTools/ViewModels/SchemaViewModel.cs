@@ -67,7 +67,7 @@ public class SchemaViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
@@ -83,11 +83,11 @@ public class SchemaViewModel : ViewModelBase
     {
         if (_schemaService.ValidateSchema(out string message))
         {
-            MessageBox.Show("Схема валидна!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Schema is valid!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         else
         {
-            MessageBox.Show(message, "Ошибка валидации", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(message, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 
