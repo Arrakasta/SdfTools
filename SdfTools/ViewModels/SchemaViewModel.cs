@@ -1,5 +1,6 @@
 ﻿using SdfTools.Abstracts;
 using SdfTools.Models;
+using SdfTools.Resources; // Add this
 using SdfTools.Services;
 using SdfTools.Utilities;
 using System.Collections.ObjectModel;
@@ -11,6 +12,7 @@ namespace SdfTools.ViewModels;
 public class SchemaViewModel : ViewModelBase
 {
     private readonly SchemaService _schemaService = new();
+    private readonly IDialogService _dialogService; // Add this
     private string? _schemaName;
     private string? _newAttributeName;
     private string? _selectedDataType;
@@ -41,8 +43,9 @@ public class SchemaViewModel : ViewModelBase
     public ICommand RemoveAttributeCommand { get; }
     public ICommand ValidateSchemaCommand { get; }
 
-    public SchemaViewModel()
+    public SchemaViewModel(IDialogService dialogService) // Modify constructor
     {
+        _dialogService = dialogService; // Add this
         AddAttributeCommand = new RelayCommand(AddAttribute);
         RemoveAttributeCommand = new RelayCommand<DataAttribute>(RemoveAttribute);
         ValidateSchemaCommand = new RelayCommand(ValidateSchema);

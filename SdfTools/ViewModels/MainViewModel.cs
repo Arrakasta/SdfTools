@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using SdfTools.Abstracts;
+using SdfTools.Resources; // Add this
+using SdfTools.Services; 
 using SdfTools.Utilities;
 using SdfTools.Views;
 using SdfTools.Localization;
@@ -14,6 +16,7 @@ namespace SdfTools.ViewModels;
 
 public class MainViewModel : ViewModelBase
 {
+    private readonly IDialogService _dialogService; // Add this
     // Paths to selected files
     private string? _selectedSchemaPath;
     public string? SelectedSchemaPath
@@ -87,9 +90,9 @@ public class MainViewModel : ViewModelBase
             Filter = LocalizedStrings.Instance.FileDialog_SchemaFilter
         };
 
-        if (dlg.ShowDialog() == true)
+        if (!string.IsNullOrEmpty(filePath))
         {
-            SelectedSchemaPath = dlg.FileName;
+            SelectedSchemaPath = filePath;
             // Here you can add logic to load the schema and populate MappingItems.TargetAttributeName
             LoadSchema(SelectedSchemaPath);
         }
@@ -101,9 +104,9 @@ public class MainViewModel : ViewModelBase
             Filter = LocalizedStrings.Instance.FileDialog_GeoDataFilter
         };
 
-        if (dlg.ShowDialog() == true)
+        if (!string.IsNullOrEmpty(filePath))
         {
-            SelectedFilePath = dlg.FileName;
+            SelectedFilePath = filePath;
             // Here you can add logic to import data using FDO to populate SourceAttributes
             ImportSourceAttributes(SelectedFilePath);
         }
@@ -188,7 +191,8 @@ public class MainViewModel : ViewModelBase
         // Here is the logic to open the schema editor window
         var view = new SchemaEditor
         {
-            DataContext = new SchemaViewModel()
+            // Pass the injected DialogService instance to SchemaViewModel
+            DataContext = new SchemaViewModel(_dialogService) 
         };
         view.ShowDialog();
     }
