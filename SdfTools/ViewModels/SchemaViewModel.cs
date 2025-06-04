@@ -12,7 +12,6 @@ namespace SdfTools.ViewModels;
 public class SchemaViewModel : ViewModelBase
 {
     private readonly SchemaService _schemaService = new();
-    private readonly IDialogService _dialogService; // Add this
     private string? _schemaName;
     private string? _newAttributeName;
     private string? _selectedDataType;
@@ -43,9 +42,8 @@ public class SchemaViewModel : ViewModelBase
     public ICommand RemoveAttributeCommand { get; }
     public ICommand ValidateSchemaCommand { get; }
 
-    public SchemaViewModel(IDialogService dialogService) // Modify constructor
+    public SchemaViewModel() // Modify constructor
     {
-        _dialogService = dialogService; // Add this
         AddAttributeCommand = new RelayCommand(AddAttribute);
         RemoveAttributeCommand = new RelayCommand<DataAttribute>(RemoveAttribute);
         ValidateSchemaCommand = new RelayCommand(ValidateSchema);
@@ -54,7 +52,7 @@ public class SchemaViewModel : ViewModelBase
         LoadAttributes();
     }
 
-    private void AddAttribute(object parameter)
+    private void AddAttribute(object? parameter)
     {
         try
         {
@@ -82,7 +80,7 @@ public class SchemaViewModel : ViewModelBase
         LoadAttributes();
     }
 
-    private void ValidateSchema(object parameter)
+    private void ValidateSchema(object? parameter)
     {
         if (_schemaService.ValidateSchema(out string message))
         {

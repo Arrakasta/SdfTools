@@ -1,22 +1,17 @@
-﻿    using Microsoft.Win32;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
+﻿using Microsoft.Win32;
 using SdfTools.Abstracts;
-using SdfTools.Resources; // Add this
-using SdfTools.Services; 
-using SdfTools.Utilities;
-using SdfTools.Views;
 using SdfTools.Localization;
 using SdfTools.Services;
+using SdfTools.Utilities;
+using SdfTools.Views;
+using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Windows.Input;
 
 namespace SdfTools.ViewModels;
 
 public class MainViewModel : ViewModelBase
 {
-    private readonly IDialogService _dialogService; // Add this
     // Paths to selected files
     private string? _selectedSchemaPath;
     public string? SelectedSchemaPath
@@ -83,12 +78,15 @@ public class MainViewModel : ViewModelBase
         StartConversionCommand = new RelayCommand(StartConversion, CanStartConversion);
         EditSchemaCommand = new RelayCommand(EditSchema, CanEditSchema);
     }    // Command to select schema
-    private void SelectSchema(object parameter)
+    private void SelectSchema(object? parameter)
     {
-        var dlg = new OpenFileDialog
+        var openFileDialog = new OpenFileDialog
         {
             Filter = LocalizedStrings.Instance.FileDialog_SchemaFilter
         };
+        if (openFileDialog.ShowDialog() != true) return;
+
+        var filePath = openFileDialog.FileName;
 
         if (!string.IsNullOrEmpty(filePath))
         {
@@ -97,12 +95,15 @@ public class MainViewModel : ViewModelBase
             LoadSchema(SelectedSchemaPath);
         }
     }    // Command to select source file
-    private void SelectFile(object parameter)
+    private void SelectFile(object? parameter)
     {
-        OpenFileDialog dlg = new OpenFileDialog
+        OpenFileDialog openFileDialog = new OpenFileDialog
         {
             Filter = LocalizedStrings.Instance.FileDialog_GeoDataFilter
         };
+        if (openFileDialog.ShowDialog() != true) return;
+
+        var filePath = openFileDialog.FileName;
 
         if (!string.IsNullOrEmpty(filePath))
         {
@@ -173,26 +174,26 @@ public class MainViewModel : ViewModelBase
     }
 
     // Example command to start conversion
-    private bool CanStartConversion(object parameter) =>
+    private bool CanStartConversion(object? parameter) =>
         !string.IsNullOrEmpty(SelectedSchemaPath) &&
         !string.IsNullOrEmpty(SelectedFilePath) &&
         MappingItems.Count > 0;
 
-    private void StartConversion(object parameter)
+    private void StartConversion(object? parameter)
     {
         // Here should be the logic to start the conversion considering the mapping
     }
 
     // Example command to edit schema
-    private bool CanEditSchema(object parameter) => true;//MappingItems.Count > 0;
+    private bool CanEditSchema(object? parameter) => true;//MappingItems.Count > 0;
 
-    private void EditSchema(object parameter)
+    private void EditSchema(object? parameter)
     {
         // Here is the logic to open the schema editor window
         var view = new SchemaEditor
         {
             // Pass the injected DialogService instance to SchemaViewModel
-            DataContext = new SchemaViewModel(_dialogService) 
+            DataContext = new SchemaViewModel()
         };
         view.ShowDialog();
     }

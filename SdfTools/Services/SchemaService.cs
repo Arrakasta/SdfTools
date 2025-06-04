@@ -13,7 +13,9 @@ public class SchemaService
     }    public void AddAttribute(string name, string dataType)
     {
         if (CurrentSchema.Attributes.Any(a => a.Name == name))
-            throw new ArgumentException(Resources.Error_AttributeAlreadyExists, nameof(name));
+        {
+            throw new ArgumentException(LocalizedStrings.Instance.SchemaService_AttributeAlreadyExists, nameof(name));
+        }
 
         CurrentSchema.Attributes.Add(new DataAttribute { Name = name, DataType = dataType });
     }
